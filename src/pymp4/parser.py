@@ -354,6 +354,21 @@ SyncSampleBox = Struct(
     )), [])
 )
 
+CompositionOffsetBox = Struct(
+    "version" / Default(Int8ub, 0),
+    "flags" / Const(0, Int24ub),
+    "entries" / Switch(this.version, {
+        0: Default(PrefixedArray(Int32ub, Struct(
+            "sample_count" / Int32ub,
+            "sample_offset" / Int32ub,
+        )), []),
+        1: Default(PrefixedArray(Int32ub, Struct(
+            "sample_count" / Int32ub,
+            "sample_offset" / Int32sb,
+        )), [])
+    })
+)
+
 SampleToChunkBox = Struct(
     "version" / Const(0, Int8ub),
     "flags" / Const(0, Int24ub),
@@ -678,6 +693,7 @@ Box = Prefixed(Int32ub, Struct(
         "stz2": SampleSizeBox2,
         "stts": TimeToSampleBox,
         "stss": SyncSampleBox,
+        "ctts": CompositionOffsetBox,
         "stsc": SampleToChunkBox,
         "stco": ChunkOffsetBox,
         "co64": ChunkLargeOffsetBox,

@@ -310,7 +310,7 @@ BitRateBox = Struct(
 SampleDescriptionBox = Struct(
     "version" / Default(Int8ub, 0),
     "flags" / Const(0, Int24ub),
-    "entries" / PrefixedArray(Int32ub, SampleEntryBox)
+    "entries" / PrefixedArray(Int32ub, LazyBound(lambda: Box))
 )
 
 SampleSizeBox = Struct(

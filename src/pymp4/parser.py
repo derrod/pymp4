@@ -181,27 +181,27 @@ VideoMediaHeaderBox = Struct(
     ),
 )
 
-DataEntryUrlBox = Prefixed(Int32ub, Struct(
+DataEntryUrlBox = Struct(
     "version" / Const(0, Int8ub),
     "flags" / BitStruct(
         Padding(23), "self_contained" / Rebuild(Flag, ~this._.location)
     ),
     "location" / If(~this.flags.self_contained, CString("utf8")),
-), includelength=True)
+)
 
-DataEntryUrnBox = Prefixed(Int32ub, Struct(
+DataEntryUrnBox = Struct(
     "version" / Const(0, Int8ub),
     "flags" / BitStruct(
         Padding(23), "self_contained" / Rebuild(Flag, ~(this._.name & this._.location))
     ),
     "name" / If(this.flags == 0, CString("utf8")),
     "location" / If(this.flags == 0, CString("utf8")),
-), includelength=True)
+)
 
 DataReferenceBox = Struct(
     "version" / Const(0, Int8ub),
     "flags" / Default(Int24ub, 0),
-    "data_entries" / PrefixedArray(Int32ub, Select(DataEntryUrnBox, DataEntryUrlBox)),
+    "data_entries" / PrefixedArray(Int32ub, LazyBound(lambda: Box)),
 )
 
 # Sample Table boxes (stbl)
@@ -670,6 +670,8 @@ Box = Prefixed(Int32ub, Struct(
         "vmhd": VideoMediaHeaderBox,
         "dinf": ContainerBoxLazy,
         "dref": DataReferenceBox,
+        "url ": DataEntryUrlBox,
+        "urn ": DataEntryUrnBox,
         "stbl": ContainerBoxLazy,
         "stsd": SampleDescriptionBox,
         "stsz": SampleSizeBox,

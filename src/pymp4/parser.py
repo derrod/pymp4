@@ -45,7 +45,6 @@ SegmentTypeBox = Struct(
 # Catch find boxes
 
 RawBox = Struct(
-    "type" / PaddedString(4, "ascii"),
     "data" / Default(GreedyBytes, b"")
 )
 

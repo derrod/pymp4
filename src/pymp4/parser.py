@@ -674,6 +674,7 @@ Box = Prefixed(Int32ub, Struct(
         "mehd": MovieExtendsHeaderBox,
         "trex": TrackExtendsBox,
         "trak": ContainerBoxLazy,
+        "edts": ContainerBoxLazy,
         "mdia": ContainerBoxLazy,
         "tkhd": TrackHeaderBox,
         "mdat": MovieDataBox,
